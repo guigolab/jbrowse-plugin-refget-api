@@ -1,35 +1,19 @@
-import Plugin from '@jbrowse/core/Plugin'
-import PluginManager from '@jbrowse/core/PluginManager'
-import ViewType from '@jbrowse/core/pluggableElementTypes/ViewType'
-import { AbstractSessionModel, isAbstractMenuManager } from '@jbrowse/core/util'
-import { version } from '../package.json'
-import {
-  ReactComponent as HelloViewReactComponent,
-  stateModel as helloViewStateModel,
-} from './HelloView'
+import AdapterType from "@jbrowse/core/pluggableElementTypes/AdapterType";
+import Plugin from "@jbrowse/core/Plugin";
+import { AdapterClass, configSchema } from "./RefGetAdapter";
+import { version } from "../package.json";
 
-export default class TemplatePlugin extends Plugin {
-  name = 'TemplatePlugin'
-  version = version
-
-  install(pluginManager: PluginManager) {
-    pluginManager.addViewType(() => {
-      return new ViewType({
-        name: 'HelloView',
-        stateModel: helloViewStateModel,
-        ReactComponent: HelloViewReactComponent,
-      })
-    })
-  }
-
-  configure(pluginManager: PluginManager) {
-    if (isAbstractMenuManager(pluginManager.rootModel)) {
-      pluginManager.rootModel.appendToMenu('Add', {
-        label: 'Hello View',
-        onClick: (session: AbstractSessionModel) => {
-          session.addView('HelloView', {})
-        },
-      })
-    }
+export default class RefGetPlugin extends Plugin {
+  name = "RefGetPlugin";
+  version = version;
+  install(pluginManager: any) {
+    pluginManager.addAdapterType(
+      () =>
+        new AdapterType({
+          name: "RefGetAdapter",
+          configSchema,
+          AdapterClass,
+        }),
+    );
   }
 }
