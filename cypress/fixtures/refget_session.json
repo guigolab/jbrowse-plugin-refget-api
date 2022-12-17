@@ -1,0 +1,41 @@
+{
+  "plugins": [
+    {
+      "name": "RefGet",
+      "url": "http://localhost:9000/dist/jbrowse-plugin-refget-api.umd.development.js"
+    }
+  ],
+  "assemblies": [
+    {
+      "name": "hg38",
+      "aliases": ["GRCh38"],
+      "sequence": {
+        "type": "ReferenceSequenceTrack",
+        "trackId": "P6R5xbRqRr",
+        "adapter": {
+          "type": "RefGetAdapter",
+          "serverLocation": {
+            "uri": "https://www.ebi.ac.uk/ena/cram/sequence/"
+          },
+          "sequenceIdType": "insdc",
+          "sequenceSizes": {
+            "HG996508.1": 10011747,
+            "HG996509.1": 9935788
+          }
+        }
+      }
+    }
+  ],
+  "defaultSession": {
+    "name": "New session",
+    "views": [
+      {
+        "assembly": "hg38",
+        "loc": "HG996508.1:4,513,949-4,514,050",
+        "type": "LinearGenomeView",
+        "tracks": [
+        ]
+      }
+    ]
+  }
+}
