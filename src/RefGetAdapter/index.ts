@@ -1,6 +1,5 @@
 import PluginManager from '@jbrowse/core/PluginManager'
 import { ConfigurationSchema } from '@jbrowse/core/configuration'
-import { types } from 'mobx-state-tree'
 import { BaseSequenceAdapter } from '@jbrowse/core/data_adapters/BaseAdapter'
 import { NoAssemblyRegion } from '@jbrowse/core/util/types'
 import { ObservableCreate } from '@jbrowse/core/util/rxjs'
@@ -8,6 +7,7 @@ import SimpleFeature, { Feature } from '@jbrowse/core/util/simpleFeature'
 import { readConfObject } from '@jbrowse/core/configuration'
 import { AnyConfigurationModel } from '@jbrowse/core/configuration/configurationSchema'
 import { getSubAdapterType } from '@jbrowse/core/data_adapters/dataAdapterCache'
+import { types } from 'mobx-state-tree'
 
 
 export const configSchema = ConfigurationSchema(
@@ -20,14 +20,14 @@ export const configSchema = ConfigurationSchema(
       type: 'fileLocation',
       description: 'URL of the GA4GH refget API instance',
       defaultValue: { 
-        uri: 'https://www.ebi.ac.uk/ena/cram/sequence/', 
+        uri: 'https://www.ebi.ac.uk/ena/cram/sequence', 
         locationType: 'UriLocation' 
       },
     },
     sequenceIdType: {
-      type: 'stringEnum',
-      defaultValue:'md5',
-      model: types.enumeration('SequenceIdType',['md5','insdc'])
+      type: 'string',
+      defaultValue:'',
+      model: types.enumeration('SequenceIdType',['','insdc'])
     },
     /**
      * #slot
@@ -45,17 +45,10 @@ export const configSchema = ConfigurationSchema(
 export class AdapterClass extends BaseSequenceAdapter {
     // the sequenceSizesData can be used to speed up loading since TwoBit has to do
     // many range requests at startup to perform the getRegions request
-    protected sequenceSizes: Promise<Record<string,number>>
+    protected sequenceSizes: Record<string,{size:number,name:string}>
   
-    protected serverLocation : Promise<Record<string, number> | undefined >
+    protected serverLocation : Promise<Record<string, number>>
   
-    private async getSeqSizes() {
-        const conf = readConfObject(this.config,'sequenceSizes')
-        return Object.fromEntries(
-            Object.keys(conf).map(seq => {
-                return [seq, conf[seq]]
-            }))
-     }
       // check against default and empty in case someone makes the field blank in
       // config editor, may want better way to check "optional config slots" in
       // future
@@ -82,7 +75,7 @@ export class AdapterClass extends BaseSequenceAdapter {
       pluginManager?: PluginManager,
     ) {
       super(config, getSubAdapter, pluginManager)
-      this.sequenceSizes = this.getSeqSizes()
+      this.sequenceSizes = readConfObject(this.config,'sequenceSizes')
       this.serverLocation = readConfObject(this.config, 'serverLocation')
     }
   
@@ -95,11 +88,11 @@ export class AdapterClass extends BaseSequenceAdapter {
     }
   
     public async getRegions(): Promise<NoAssemblyRegion[]> {
-      const sequenceSizesData = await this.sequenceSizes
-      return Object.keys(sequenceSizesData).map(refName => ({
-          refName,
+      const sequenceSizesData = this.sequenceSizes
+      return Object.keys(sequenceSizesData).map(k => ({
+          refName: sequenceSizesData[k].name,
           start: 0,
-          end: sequenceSizesData[refName],
+          end: sequenceSizesData[k].size,
       }))
      }
     /**
@@ -110,9 +103,11 @@ export class AdapterClass extends BaseSequenceAdapter {
     public getFeatures({ refName, start, end }: NoAssemblyRegion) {
       return ObservableCreate<Feature>(async observer => {
           const { uri } = readConfObject(this.config, 'serverLocation')
-          const idQuery = readConfObject(this.config, 'sequenceIdType') === 'insdc' ?  `insdc:${refName}`: refName
+          const id = Object.keys(this.sequenceSizes).find(seq => this.sequenceSizes[seq].name === refName)
+          const idType = readConfObject(this.config, 'sequenceIdType')
+          const query = idType ? `${idType}:${id}`: id
       try {
-          const result = await fetch(`${uri}/${idQuery}?start=${start}&end=${end}`)
+          const result = await fetch(`${uri}/${query}?start=${start}&end=${end}`)
           if (!result.ok) {
               throw new Error(
                   `Failed to fetch ${result.status} ${result.statusText}`,

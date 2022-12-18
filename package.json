@@ -48,7 +48,7 @@
     "postversion": "git push --follow-tags"
   },
   "jbrowse-plugin": {
-    "name": "Template"
+    "name": "RefGet"
   },
   "prettier": {
     "semi": false,
@@ -115,8 +115,7 @@
     "tss-react": "^3.0.0",
     "typescript": "^4.1.3"
   },
-  "private": true,
-  "description": "> Template to quickly start a new JBrowse plugin",
+  "description": "A JBrowse Plugin to fetch assembly sequences from GA4GH RefGet compliant servers",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/emiliorighi/jbrowse-plugin-refget-api.git"

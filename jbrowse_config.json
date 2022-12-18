@@ -7,20 +7,19 @@
   ],
   "assemblies": [
     {
-      "name": "hg38",
-      "aliases": ["GRCh38"],
+      "name": "ilAbrTrip1.1",
       "sequence": {
         "type": "ReferenceSequenceTrack",
-        "trackId": "P6R5xbRqRr",
+        "trackId": "assembly_track",
         "adapter": {
           "type": "RefGetAdapter",
           "serverLocation": {
-            "uri": "https://www.ebi.ac.uk/ena/cram/sequence/"
+            "uri": "https://www.ebi.ac.uk/ena/cram/sequence"
           },
           "sequenceIdType": "insdc",
           "sequenceSizes": {
-            "HG996508.1": 10011747,
-            "HG996509.1": 9935788
+            "HG996508.1": {"size":10011747, "name":"22"},
+            "HG996509.1": {"size":9935788, "name":"23"}
           }
         }
       }
