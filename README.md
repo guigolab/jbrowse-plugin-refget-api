@@ -52,7 +52,7 @@ a configuration will look like this:
             "uri": "https://www.ebi.ac.uk/ena/cram/sequence" //url of the server + /secuence endpoint
           },
           "sequenceIdType": "", // optional
-          "sequenceSizes": {          // mandatory 
+          "sequenceData": {          // mandatory 
             "md5checksum1": {name: chr1, size: 1000000},
             "md5checksum2": {name: chr2, size: 920300},
           }

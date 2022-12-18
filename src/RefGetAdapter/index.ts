@@ -80,7 +80,7 @@ export class AdapterClass extends BaseSequenceAdapter {
       pluginManager?: PluginManager,
     ) {
       super(config, getSubAdapter, pluginManager)
-      this.sequenceData = readConfObject(this.config,'sequenceSizes')
+      this.sequenceData = readConfObject(this.config,'sequenceData')
       this.serverLocation = readConfObject(this.config, 'serverLocation')
     }
   
