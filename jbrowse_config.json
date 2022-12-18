@@ -13,13 +13,9 @@
         "trackId": "assembly_track",
         "adapter": {
           "type": "RefGetAdapter",
-          "serverLocation": {
-            "uri": "https://www.ebi.ac.uk/ena/cram/sequence"
-          },
-          "sequenceIdType": "insdc",
-          "sequenceSizes": {
-            "HG996508.1": {"size":10011747, "name":"22"},
-            "HG996509.1": {"size":9935788, "name":"23"}
+          "sequenceData": {
+            "b1b72f5c4891023c8c5d02611f505442": {"size":10011747, "name":"22"},
+            "23b582565fb07306054d0039755d356b": {"size":9935788, "name":"23"}
           }
         }
       }

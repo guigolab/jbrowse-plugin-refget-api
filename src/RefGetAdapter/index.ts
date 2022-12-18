@@ -32,7 +32,7 @@ export const configSchema = ConfigurationSchema(
     /**
      * #slot
      */
-    sequenceSizes: {
+     sequenceData: {
       type: 'frozen',
       defaultValue: {},
       description:
@@ -42,10 +42,15 @@ export const configSchema = ConfigurationSchema(
   { explicitlyTyped: true },
 )
 
+interface SequenceObject{
+    name:string
+    size:number
+}
+
 export class AdapterClass extends BaseSequenceAdapter {
     // the sequenceSizesData can be used to speed up loading since TwoBit has to do
     // many range requests at startup to perform the getRegions request
-    protected sequenceSizes: Record<string,{size:number,name:string}>
+    protected sequenceData: Record<string,SequenceObject>
   
     protected serverLocation : Promise<Record<string, number>>
   
@@ -75,7 +80,7 @@ export class AdapterClass extends BaseSequenceAdapter {
       pluginManager?: PluginManager,
     ) {
       super(config, getSubAdapter, pluginManager)
-      this.sequenceSizes = readConfObject(this.config,'sequenceSizes')
+      this.sequenceData = readConfObject(this.config,'sequenceSizes')
       this.serverLocation = readConfObject(this.config, 'serverLocation')
     }
   
@@ -88,7 +93,7 @@ export class AdapterClass extends BaseSequenceAdapter {
     }
   
     public async getRegions(): Promise<NoAssemblyRegion[]> {
-      const sequenceSizesData = this.sequenceSizes
+      const sequenceSizesData = this.sequenceData
       return Object.keys(sequenceSizesData).map(k => ({
           refName: sequenceSizesData[k].name,
           start: 0,
@@ -103,7 +108,7 @@ export class AdapterClass extends BaseSequenceAdapter {
     public getFeatures({ refName, start, end }: NoAssemblyRegion) {
       return ObservableCreate<Feature>(async observer => {
           const { uri } = readConfObject(this.config, 'serverLocation')
-          const id = Object.keys(this.sequenceSizes).find(seq => this.sequenceSizes[seq].name === refName)
+          const id = Object.keys(this.sequenceData).find(seq => this.sequenceData[seq].name === refName)
           const idType = readConfObject(this.config, 'sequenceIdType')
           const query = idType ? `${idType}:${id}`: id
       try {
