@@ -85,11 +85,7 @@ export class AdapterClass extends BaseSequenceAdapter {
     }
   
     public async getRefNames() {
-      // const sequenceSizesData = this.sequenceSizesData
-      // if (sequenceSizesData && sequenceSizesData.length) {
-      //   return sequenceSizesData.map(s => s.id)
-      // }
-      return []
+      return Object.values(this.sequenceData).map(({name}) => name)
     }
   
     public async getRegions(): Promise<NoAssemblyRegion[]> {
