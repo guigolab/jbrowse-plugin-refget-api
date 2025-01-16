@@ -1,6 +1,17 @@
 {
-  "version": "0.0.1",
-  "name": "jbrowse-plugin-template",
+  "version": "1.1.0",
+  "name": "jbrowse-plugin-refget-api",
+  "description": "A JBrowse Plugin to fetch assembly sequences from GA4GH RefGet compliant servers",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/emiliorighi/jbrowse-plugin-refget-api.git"
+  },
+  "author": "Emilio Righi",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/emiliorighi/jbrowse-plugin-refget-api/issues"
+  },
+  "homepage": "https://github.com/emiliorighi/jbrowse-plugin-refget-api#readme",
   "keywords": [
     "jbrowse",
     "jbrowse2"
@@ -19,7 +30,7 @@
     },
     "jbrowse": {
       "plugin": {
-        "name": "Template"
+        "name": "RefGet"
       }
     }
   },
@@ -47,8 +58,11 @@
     "prepack": "npm-run-all build",
     "postversion": "git push --follow-tags"
   },
+  "publishConfig": {
+    "registry": "https://registry.npmjs.org/"
+  },
   "jbrowse-plugin": {
-    "name": "Template"
+    "name": "RefGet"
   },
   "peerDependencies": {
     "@jbrowse/core": "^2.0.0"
@@ -101,6 +115,5 @@
     "ts-node": "^10.3.0",
     "tss-react": "^4.8.6",
     "typescript": "^5.3.3"
-  },
-  "private": true
+  }
 }
